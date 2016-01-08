@@ -1,0 +1,113 @@
+/* The purpose of this program is to enable the user to enter a check number
+ * and amount. The user should then be able to see any checks missing in the
+ * sequence by produced dashes as amounts. The program will print out the total 
+ * number of checks, the amount of all the checks, the total number of large 
+ * checks (checks over $500.00 which will be flagged for reference) written,
+ * the total of low checks (checks under $1.50 which are also flagged to encourage
+ * such customers to use debit cards) as well as the average of all checks and the
+ * average amount of the normal (those not large or small) checks. It will be assumed 
+ * that the user will input the checks in ascending order, although there may be missing
+ * checks in the sequence. 
+ * 
+ * Casey Smith
+ * Date: 10/13/14
+ */
+
+import java.util.Scanner;
+public class CheckNum {
+
+public static void main (String[] args)
+{
+	int checkNum, current, numSmall=0, numLarge=0, numChecks=0;	
+	double  amount=0, 											//declaration of variables
+			sumAmount=0, //sum of all of the check amounts 
+			sumChecks=0, //sum of the amount of checks
+			sumNorm=0; // sum of the amount of normal checks
+	
+	
+	
+	Scanner kbd=new Scanner (System.in);
+	System.out.println("Please input a check number and a negative number to quit");
+	checkNum=kbd.nextInt();
+	//reads in the first check number
+	
+	current=checkNum;		//makes the list of checks start at the first check number read in from the keyboard 
+	
+	System.out.println("Check \t\t Amount\n"
+			+ "------ \t\t --------");			//prints headings "Check" and "Amount"
+	
+	
+	while (checkNum>0) 
+	{	
+		while (current!=checkNum)	//nested loop, begins if the current number is not equal to the check number
+		{
+		System.out.println(+current + "\t\t --------");
+		current++;
+		} //end of nested loop
+	
+	System.out.print("\t\t\t\tEnter the amount of the check");
+		amount=kbd.nextDouble();
+		//reads in the check amount
+		
+		sumAmount=sumAmount+amount;		//adds amounts from each loop to the sum amount variable
+		
+		
+			if(amount>500)
+			{
+				numLarge++;		//increments the amount of large checks by one
+			}
+				
+			if(amount<1.50)
+			{
+				numSmall++;		//increments the amount of small checks by one
+			}
+			
+			else if (amount>0 && amount<500)
+			{
+				sumNorm=sumNorm+amount;				//assigns the amount to the "sumNorm" variable. This results
+													//as a sum because each time the loop is iterated, the sumNorm
+													//is increased by each amount. 
+			}
+			
+			numChecks++;		
+			sumChecks=sumChecks+amount;	
+			System.out.print(checkNum +"\t\t$" +amount);	
+			current++;			//increments the current variable by one
+			
+					
+	System.out.print("\t\tPlease input a check number and a negative number to quit");
+				checkNum=kbd.nextInt();
+	} //end of outer loop
+	
+	
+	System.out.println("\nThe total number of checks was " +numChecks);
+	System.out.println("The total amount of all the checks was $" +sumAmount);
+	System.out.println("The number of large checks over $500 is " +numLarge);
+	System.out.println("The number of small checks under $1.50 is " +numSmall);
+	
+	findavgNorm(sumNorm, numChecks, numLarge, numSmall);	//call to a method with arguments to find 
+															//the average of only normal checks
+	
+	findavgCheck(sumChecks, numChecks); 					//call to a method with arguments to find 
+															//the average of all checks
+	
+	kbd.close();
+}
+
+public static void findavgNorm(double sumNorm, int numChecks, int numLarge, int numSmall)
+{
+	//method that is sent to the main in order to tell the user the
+	//average of only normal checks.
+	double averageNorm=sumNorm/(numChecks-(numLarge+numSmall));
+	System.out.printf("The average of normal checks is $%.2f", averageNorm);
+}
+
+public static void findavgCheck(double sumChecks, int numChecks )
+{
+	//method that is sent to the main in order to tell the user the
+	//average of all checks.
+	double averageAll=sumChecks/numChecks;
+	System.out.printf("\nThe average of all checks is $%.2f", averageAll);
+}
+
+}
